@@ -1,12 +1,33 @@
-import { useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faUser, faBars, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { UserContext } from '../../contexts/UserContext'
+import Search from '../../components/Search'
 
 const Header = ({ props }) => {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const { user, isAuthenticated, logout } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  const toggleMenu = () => setMenuOpen(!menuOpen)
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <header className="bg-[#070720] text-white font-['\Mulish\'] font-medium">
@@ -22,28 +43,28 @@ const Header = ({ props }) => {
             <li>
               <h5 className="text-white font-bold text-sm">
                 <Link to={'/'}>
-                  Homepage
+                  Trang chủ
                 </Link>
               </h5>
             </li>
             <li>
               <h5 className="text-white font-bold text-sm">
                 <Link to={'/movie'}>
-                  Movies
+                  Phim
                 </Link>
               </h5>
             </li>
             <li>
               <h5 className="text-white font-bold text-sm">
                 <Link to={'/blog'}>
-                  Our Blog
+                  Bài viết
                 </Link>
               </h5>
             </li>
             <li>
               <h5 className="text-white font-bold text-sm">
                 <Link to={'/'}>
-                  Contact
+                  Liên hệ
                 </Link>
               </h5>            
             </li>
@@ -51,12 +72,48 @@ const Header = ({ props }) => {
         </nav>
 
         <div className="flex items-center space-x-4 gap-3">
-          <a style={{ marginRight: '8px' }} href="/"><FontAwesomeIcon icon={faSearch} /></a>
-          <a href="/login"><FontAwesomeIcon icon={faUser} /></a>
+          {/* <a style={{ marginRight: '8px' }} href="/">
+            <FontAwesomeIcon icon={faSearch} />
+          </a> */}
+          <Search />
+
+          {isAuthenticated ? (
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center space-x-2"
+              >
+                <img
+                  src={user?.avatar || '/img/blog/details/comment-3.png'}
+                  alt="Avatar"
+                  className="w-8 h-8 rounded-full object-cover border border-white cursor-pointer"
+                />
+                <span className="hidden lg:inline text-sm">{user?.name || user?.username}</span>
+              </button>
+
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow-lg z-50">
+                  <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 text-black" style={{ color: 'black' }}>Hồ sơ</Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/login">
+              <FontAwesomeIcon icon={faUser} />
+            </Link>
+          )}
+
           <button className="lg:hidden" onClick={toggleMenu}>
             <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} />
           </button>
         </div>
+
       </div>
     </header>
   )

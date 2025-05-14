@@ -12,16 +12,19 @@ import { NotFound } from './pages/404'
 import { DefaultLayout } from "./Layouts"
 import { LoaderProvider } from "./contexts/LoaderContext"
 import { Vertify } from "./pages/Vertify"
+import Success from "./pages/Success/Success"
+import ScrollToTop from "./components/ScrollToTop"
 
 function App() {
   return (
     <Router>
-      <LoaderProvider>
+      {/* <LoaderProvider> */}
+        <ScrollToTop />
         <Routes>
           <Route element={<DefaultLayout />}>
             <Route path='/blog' element={<Blog />} />
             <Route path='/blog-detail/:blogId' element={<BlogDetail />} />
-            <Route path='/detail/:detailId' element={<Detail />} />
+            <Route path='/detail/:movieId' element={<Detail />} />
             <Route path='/favorite' element={<Favorite />} />
             <Route path='/movie' element={<Movie />} />
             <Route path='/' element={<Home />} />
@@ -29,9 +32,10 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/vertify' element={<Vertify />} />
+          <Route path='/success' element={<Success />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </LoaderProvider>
+      {/* </LoaderProvider> */}
     </Router>
   )
 }

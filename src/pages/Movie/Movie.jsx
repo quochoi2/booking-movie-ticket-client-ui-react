@@ -1,7 +1,6 @@
 import Breadcrumb from "../../components/Breadcrumb"
 import MovieList from "../../components/MovieList"
 import TopMovies from "../../components/TopMovies"
-import Pagination from '../../components/Pagination'
 
 const Movie = () => {
   return (  
@@ -14,8 +13,9 @@ const Movie = () => {
               className="grid grid-cols-1 md:grid-cols-3 gap-4"
               viewAll='hidden'
               sectionClass='max-w-[770px]'
+              showPagination={true}
+              itemsPerPage={6}
             />
-            <Pagination />
           </div>
           <TopMovies />
         </div>

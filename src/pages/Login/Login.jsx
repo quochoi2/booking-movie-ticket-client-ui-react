@@ -6,7 +6,7 @@ import { UserContext } from '../../contexts/UserContext'
 import secret from '../../secret'
 
 const Login = () => {
-  const { login } = useContext(UserContext)
+  const { login, user } = useContext(UserContext)
   const navigate = useNavigate()
 
   const [username, setUsername] = useState("")
@@ -19,8 +19,10 @@ const Login = () => {
 
     try {
       const userData = await AuthService.loginWithLocal(username, password)
+      // console.log(userData);
       login(userData)
       navigate("/")
+      alert('Đăng nhập thành công')
     } catch (error) {
       setError("Đăng nhập thất bại, vui lòng kiểm tra lại!")
       console.error("Lỗi đăng nhập:", error)

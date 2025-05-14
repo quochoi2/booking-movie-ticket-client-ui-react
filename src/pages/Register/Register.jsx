@@ -2,16 +2,17 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BreadcrumbHero from '../../components/BreadcrumbHero'
 import AuthService from '../../services/authService'
+import { message } from 'antd'
 
 const Register = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    username: "",
-    password: "",
-    confirmPassword: "",
+    fullname: "Nguyen Van D",
+    email: "cuoivui333@gmail.com",
+    username: "nguyend",
+    password: "111111",
+    confirmPassword: "111111",
     role: "user",
   })
 
@@ -46,11 +47,12 @@ const Register = () => {
     try {
       await AuthService.register({ fullname, email, username, password, role })
 
-      alert('Đăng ký thành công! Chuyển hướng đến trang đăng nhập...')
+      message.success('Đăng ký thành công! Hãy xác thực tài khoản...')
       setTimeout(() => navigate('/vertify'), 2000);
     } catch (error) {
       setError('Đăng ký thất bại. Vui lòng kiểm tra lại.');
       console.error('Lỗi đăng ký:', error)
+      message.error('Tài khoản đã tồn tại')
     }
   }
 
@@ -79,9 +81,9 @@ const Register = () => {
                   <div className="mb-4">
                     <input
                       type="text"
-                      name="name"
+                      name="fullname"
                       placeholder="Tên của bạn..."
-                      value={formData.name}
+                      value={formData.fullname}
                       onChange={handleChange}
                       className="w-full p-3 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:outline-none"
                       required
