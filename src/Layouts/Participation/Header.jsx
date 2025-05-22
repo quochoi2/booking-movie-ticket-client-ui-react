@@ -4,6 +4,7 @@ import { faSearch, faUser, faBars, faTimes } from '@fortawesome/free-solid-svg-i
 import { Link, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../contexts/UserContext'
 import Search from '../../components/Search'
+import AuthService from '../../services/authService'
 
 const Header = ({ props }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,6 +16,7 @@ const Header = ({ props }) => {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const handleLogout = () => {
+    AuthService.logout();
     logout();
     navigate('/login');
   };
@@ -84,16 +86,24 @@ const Header = ({ props }) => {
                 className="flex items-center space-x-2"
               >
                 <img
-                  src={user?.avatar || '/img/blog/details/comment-3.png'}
+                  src={user?.avatar || '/img/user-default.jpg'}
                   alt="Avatar"
                   className="w-8 h-8 rounded-full object-cover border border-white cursor-pointer"
                 />
-                <span className="hidden lg:inline text-sm">{user?.name || user?.username}</span>
+                <span className="hidden lg:inline text-sm">{user?.fullname || user?.username}</span>
               </button>
 
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow-lg z-50">
-                  <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 text-black" style={{ color: 'black' }}>Hồ sơ</Link>
+                  <button
+                    onClick={() => {
+                      navigate('/profile');
+                      setDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Hồ sơ
+                  </button>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"

@@ -125,7 +125,7 @@ const Detail = () => {
 
             {/* review */}
             <div className='md:flex md:gap-10 md:justify-between'>
-              <Review />
+              <Review movieId={movieId} />
               <TopMovies />
             </div>
           </div>

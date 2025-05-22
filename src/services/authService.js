@@ -18,11 +18,15 @@ const AuthService = {
   loginWithLocal: async (username, password) => {
     try {
       const res = await requestApiPublic.post('/auth/login', { username, password })
+      console.log(res);
       if (res?.data?.token?.accessToken) {
-        const { accessToken } = res.data.token
-        const userInfo = jwtDecode(accessToken)
+        const userInfo = jwtDecode(res.data.token.accessToken)
 
-        localStorage.setItem('accessToken', accessToken)
+        localStorage.setItem('accessToken', res.data.token.accessToken)
+
+        // Lưu thông tin user vào localStorage dưới dạng JSON string
+        console.log(res.data.user);
+        localStorage.setItem('user', JSON.stringify(res.data.user))
         return userInfo
       } else {
         throw new Error('Đăng nhập thất bại')
@@ -45,7 +49,7 @@ const AuthService = {
 
   logout: () => {
     localStorage.removeItem("accessToken")
-    window.location.replace("/login")
+    localStorage.removeItem('user')
   },
 }
 

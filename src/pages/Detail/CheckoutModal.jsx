@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useOrder } from '../../contexts/OrderContext'
-import DetailService from '../../services/movieDetailService';
-import { useNavigate } from 'react-router-dom';
+import DetailService from '../../services/movieDetailService'
+import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../../contexts/UserContext';
 
 const CheckoutModal = ({ onClose, onConfirmPayment }) => {
   const navigate = useNavigate();
   const { orderData } = useOrder();
+  const { isAuthenticated } = useContext(UserContext);
 
   // Phương thức thanh toán
   const paymentMethods = [
@@ -34,6 +36,11 @@ const CheckoutModal = ({ onClose, onConfirmPayment }) => {
   const pollingRef = useRef(null);
 
   const handleConfirmPayment = () => {
+    if (!isAuthenticated) {
+      alert("Vui lòng đăng nhập để tiếp tục thanh toán.");
+      return;
+    }
+
     if (!selectedPayment) {
       alert('Vui lòng chọn phương thức thanh toán');
       return;
@@ -54,7 +61,7 @@ const CheckoutModal = ({ onClose, onConfirmPayment }) => {
   };
 
   const generateQR = () => {
-    const transactionId = 'SE' + Math.floor(Math.random() * 1000000000);
+    const transactionId = Math.floor(Math.random() * 1000000000);
     const description = 
       // `MOVIE${transactionId}`;
       'MOVIESE12440337'
@@ -130,7 +137,6 @@ const CheckoutModal = ({ onClose, onConfirmPayment }) => {
         
         // Thông báo thành công
         alert('Thanh toán thành công! Vé sẽ được gửi qua email.');
-        
         
         // Điều hướng về trang chủ sau 2 giây
         setTimeout(() => {

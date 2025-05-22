@@ -14,6 +14,7 @@ import { LoaderProvider } from "./contexts/LoaderContext"
 import { Vertify } from "./pages/Vertify"
 import Success from "./pages/Success/Success"
 import ScrollToTop from "./components/ScrollToTop"
+import { Profile } from "./pages/Profile"
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path='/favorite' element={<Favorite />} />
             <Route path='/movie' element={<Movie />} />
             <Route path='/' element={<Home />} />
+            <Route path='/profile' element={<Profile />} />
           </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />

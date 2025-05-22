@@ -19,7 +19,6 @@ const Login = () => {
 
     try {
       const userData = await AuthService.loginWithLocal(username, password)
-      // console.log(userData);
       login(userData)
       navigate("/")
       alert('Đăng nhập thành công')
