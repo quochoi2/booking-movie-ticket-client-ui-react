@@ -1,16 +1,53 @@
 import Breadcrumb from "../../components/Breadcrumb";
 import { useEffect, useState, useRef } from "react";
 import ProfileService from "../../services/profileService";
+import OrderModal from "./OrderModal";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
 
+  const [orders, setOrders] = useState([]);
+  const [orderCount, setOrderCount] = useState(0);
+  const [showOrdersModal, setShowOrdersModal] = useState(false);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+
+  // orders
+  const fetchOrderCount = async () => {
+    try {
+      const response = await ProfileService.getOrderByUser();
+      console.log(response.data);
+      if (response.data) {
+        setOrderCount(response.data.data.length);
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  const fetchAllOrders = async () => {
+    setIsLoadingOrders(true);
+    try {
+      const response = await ProfileService.getOrderByUser();
+      if (response.data && response.data.code === 0) {
+        setOrders(response.data.data);
+        setShowOrdersModal(true);
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    } finally {
+      setIsLoadingOrders(false);
+    }
+  };
+
+
+  // Profile
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (userData) {
       setUser(JSON.parse(userData));
+      fetchOrderCount();
     }
   }, []);
 
@@ -131,38 +168,57 @@ const Profile = () => {
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Thông tin cá nhân */}
               <div className="bg-gray-50 p-6 rounded-lg">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Thông tin cá nhân</h2>
+                <h2 className="text-xl font-semibold text-gray-800" style={{ marginBottom: '12px' }}>Thông tin cá nhân</h2>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-sm text-gray-500">Email</p>
-                    <p className="text-gray-800 font-medium">{user.email}</p>
+                    <p className="text-sm text-gray-500" style={{ margin: 0 }}>Email:
+                      <span className="ml-2 text-black">
+                       {user.email}
+                      </span>
+                    </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Tên đầy đủ</p>
-                    <p className="text-gray-800 font-medium">
-                      {user.fullname || user.fullName || "Chưa cập nhật"}
+                    <p className="text-sm text-gray-500" style={{ margin: 0 }}>Họ và tên:
+                      <span className="ml-2 text-black">
+                       {user.fullname}
+                      </span>
                     </p>
                   </div>
                 </div>
               </div>
               
-              {/* Thống kê hoặc thông tin khác */}
+              {/* Thống kê hoạt động */}
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Hoạt động</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white p-4 rounded-md shadow-sm text-center">
                     <p className="text-gray-500 text-sm">Đơn hàng</p>
-                    <p className="text-2xl font-bold text-blue-600">12</p>
+                    <p className="text-2xl font-bold text-blue-600">{orderCount}</p>
                   </div>
                   <div className="bg-white p-4 rounded-md shadow-sm text-center">
                     <p className="text-gray-500 text-sm">Đánh giá</p>
                     <p className="text-2xl font-bold text-yellow-500">8</p>
                   </div>
                 </div>
+                <button 
+                  onClick={fetchAllOrders}
+                  disabled={isLoadingOrders}
+                  className="mt-4 w-full bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md transition duration-200"
+                >
+                  {isLoadingOrders ? 'Đang tải...' : 'Xem tất cả đơn hàng'}
+                </button>
               </div>
             </div>
           </div>
         </section>
+
+        {/* Modal hiển thị đơn hàng */}
+        {showOrdersModal && (
+          <OrderModal 
+            orders={orders} 
+            onClose={() => setShowOrdersModal(false)} 
+          />
+        )}
       </div>
     </div>
   );

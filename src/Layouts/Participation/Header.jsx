@@ -44,7 +44,7 @@ const Header = ({ props }) => {
   return (
     <header className="bg-[#070720] text-white font-['\Mulish\'] font-medium">
       <div className="container mx-auto flex justify-between items-center p-4">
-        <div className="text-2xl font-bold">
+        <div className="text-2xl font-bold w-[240px]">
           <Link to={'/'}>
             <img src="/img/logo.png" alt="logo" width={50} />
           </Link>

@@ -8,7 +8,7 @@ const Movie = () => {
       <div>
         <Breadcrumb />
         <div className="flex gap-[30px] max-w-[1170px]">
-          <div>
+          <div className="py-10">
             <MovieList 
               className="grid grid-cols-1 md:grid-cols-3 gap-4"
               viewAll='hidden'

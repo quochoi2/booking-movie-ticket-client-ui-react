@@ -63,8 +63,8 @@ const CheckoutModal = ({ onClose, onConfirmPayment }) => {
   const generateQR = () => {
     const transactionId = Math.floor(Math.random() * 1000000000);
     const description = 
-      // `MOVIE${transactionId}`;
-      'MOVIESE12440337'
+      `MOVIE${transactionId}`;
+      // 'MOVIESE12440337'
     setBankInfo(prev => ({
       ...prev,
       paymentDescription: description

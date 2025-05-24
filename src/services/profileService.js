@@ -1,4 +1,4 @@
-import { requestApiFile } from "../utils/requestApi"
+import { requestApiFile, requestApiJson } from "../utils/requestApi"
 
 const ProfileService = {
   updateImage: async (formData) => {  // Nhận formData làm tham số
@@ -14,7 +14,6 @@ const ProfileService = {
     formData.append('id', id);
 
     return await requestApiFile.put('/user/update-with-image', formData);
-    // Đã bỏ dấu phẩy thừa sau formData
   },
 
   updateProfile: async (formData) => {  // Nhận formData làm tham số
@@ -32,6 +31,9 @@ const ProfileService = {
     // Đã bỏ dấu phẩy thừa sau formData
   },
 
+  getOrderByUser: async () => {
+    return await requestApiJson.get(`/order/by-user`)
+  }
 }
 
 export default ProfileService

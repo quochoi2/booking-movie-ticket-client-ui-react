@@ -47,8 +47,8 @@ const Home = () => {
       <div>
         <Hero />
         <TopMovies className={"grid grid-cols-1 md:grid-cols-4 gap-4"} />
-        <MovieList className={'grid grid-cols-1 md:grid-cols-4 gap-5'} />
-        <BlogList />
+        <MovieList className={'grid grid-cols-1 md:grid-cols-4 gap-5 pb-20'} />
+        {/* <BlogList /> */}
       </div>
     </div>
   )

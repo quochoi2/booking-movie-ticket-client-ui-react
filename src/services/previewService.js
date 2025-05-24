@@ -6,11 +6,11 @@ const PreviewService = {
   },
 
   createPreview: async (data) => {
-    return await requestApiJson.post(`preview`, data)
+    return await requestApiJson.post(`/preview`, data)
   },
 
   deletePreview: async (previewId) => {
-    return await requestApiJson.delete(`preview/${previewId}`)
+    return await requestApiJson.delete(`/preview/${previewId}`)
   }
 }
 

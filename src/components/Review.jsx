@@ -65,6 +65,7 @@ const Review = ({ movieId }) => {
     
     try {
       await PreviewService.deletePreview(previewId);
+      alert('Xoá thành công');
       setReviews(reviews.filter(review => review.id !== previewId));
     } catch (error) {
       console.error('Error deleting review:', error);
