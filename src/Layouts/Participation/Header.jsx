@@ -9,15 +9,25 @@ import AuthService from '../../services/authService'
 const Header = ({ props }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [user, setUser] = useState(null); // Thêm state cho user
   const dropdownRef = useRef(null);
-  const { user, isAuthenticated, logout } = useContext(UserContext);
+  const { isAuthenticated, logout } = useContext(UserContext);
   const navigate = useNavigate();
+
+  // Thêm useEffect để lấy thông tin user từ localStorage khi component mount
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, [isAuthenticated]); // Chạy lại khi trạng thái isAuthenticated thay đổi
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const handleLogout = () => {
     AuthService.logout();
     logout();
+    setUser(null); // Xóa thông tin user khi logout
     navigate('/login');
   };
 
@@ -74,9 +84,6 @@ const Header = ({ props }) => {
         </nav>
 
         <div className="flex items-center space-x-4 gap-3">
-          {/* <a style={{ marginRight: '8px' }} href="/">
-            <FontAwesomeIcon icon={faSearch} />
-          </a> */}
           <Search />
 
           {isAuthenticated ? (
@@ -86,7 +93,7 @@ const Header = ({ props }) => {
                 className="flex items-center space-x-2"
               >
                 <img
-                  src={user?.avatar || '/img/user-default.jpg'}
+                  src={user?.image || '/img/user-default.jpg'}
                   alt="Avatar"
                   className="w-8 h-8 rounded-full object-cover border border-white cursor-pointer"
                 />
@@ -123,7 +130,6 @@ const Header = ({ props }) => {
             <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} />
           </button>
         </div>
-
       </div>
     </header>
   )

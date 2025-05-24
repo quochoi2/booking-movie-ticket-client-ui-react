@@ -12,22 +12,32 @@ const Home = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("access-token");
-
+    const userJson = params.get("user"); // Lấy chuỗi JSON user từ URL
+  
     if (token) {
       try {
         localStorage.setItem("accessToken", token);
-
-        // Giải mã và lưu vào context
-        const userInfo = jwtDecode(token);
+  
+        // Giải mã user từ JSON (KHÔNG cần dùng atob vì không mã hóa base64)
+        let userInfo = jwtDecode(token);
+        if (userJson) {
+          const decodedUserData = JSON.parse(decodeURIComponent(userJson));
+          userInfo = {
+            ...userInfo,
+            ...decodedUserData, // Gộp thông tin từ token và user data
+          };
+        }
+  
+        localStorage.setItem("user", JSON.stringify(userInfo));
         login(userInfo);
-        
-        // console.log(userInfo);
-
-        // Xóa token khỏi URL để sạch sẽ
+  
+        // Xóa token và user data khỏi URL
         const newUrl = window.location.origin + window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
       } catch (err) {
         console.error("Lỗi xử lý token từ URL:", err);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("user");
       }
     }
   }, [login]);
@@ -41,7 +51,6 @@ const Home = () => {
         <BlogList />
       </div>
     </div>
-
   )
 }
  

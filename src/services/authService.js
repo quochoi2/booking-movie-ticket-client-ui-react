@@ -1,5 +1,4 @@
 import { requestApiPublic } from "../utils/requestApi"
-import { jwtDecode } from "jwt-decode"
 
 const AuthService = {
   loginWithGoogle: async () => {
@@ -18,16 +17,11 @@ const AuthService = {
   loginWithLocal: async (username, password) => {
     try {
       const res = await requestApiPublic.post('/auth/login', { username, password })
-      console.log(res);
+      console.log(res.data);
       if (res?.data?.token?.accessToken) {
-        const userInfo = jwtDecode(res.data.token.accessToken)
-
         localStorage.setItem('accessToken', res.data.token.accessToken)
-
-        // Lưu thông tin user vào localStorage dưới dạng JSON string
-        console.log(res.data.user);
         localStorage.setItem('user', JSON.stringify(res.data.user))
-        return userInfo
+        return res.data.user
       } else {
         throw new Error('Đăng nhập thất bại')
       }

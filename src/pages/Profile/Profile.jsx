@@ -7,7 +7,6 @@ const Profile = () => {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
 
-
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (userData) {
@@ -46,7 +45,7 @@ const Profile = () => {
   
         // 2. Cập nhật localStorage
         const updatedUser = {
-          ...JSON.parse(localStorage.getItem('user')), // Lấy dữ liệu hiện tại
+          ...JSON.parse(localStorage.getItem('user')), 
           image: newImageUrl
         };
         localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -75,7 +74,7 @@ const Profile = () => {
   return (
     <div className="flex justify-center mx-5 py-8">
       <div className="w-full max-w-4xl">
-        <Breadcrumb />
+        <Breadcrumb items={['Hồ sơ', 'Thông tin cá nhân']} />
         
         <section className="bg-white rounded-lg shadow-md overflow-hidden mt-6">
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-32 relative">
@@ -88,7 +87,7 @@ const Profile = () => {
                 <img 
                   key={user.image} // Thêm dòng này
                   src={user.image}
-                  alt={user.fullname || user.username}
+                  alt={user.fullname}
                   className={`w-32 h-32 rounded-full border-4 border-white object-cover shadow-lg ${isUploading ? 'opacity-70' : ''}`}
                   onError={(e) => {
                     e.target.onerror = null;
@@ -143,10 +142,6 @@ const Profile = () => {
                     <p className="text-gray-800 font-medium">
                       {user.fullname || user.fullName || "Chưa cập nhật"}
                     </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Tên đăng nhập</p>
-                    <p className="text-gray-800 font-medium">{user.username}</p>
                   </div>
                 </div>
               </div>

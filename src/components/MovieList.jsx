@@ -61,7 +61,7 @@ const MovieList = ({
 
   if (loading) {
     return (
-      <section className={`trending-now py-10 ${sectionClass}`}>
+      <section className={`trending-now ${sectionClass}`}>
         <div className="container mx-auto">
           <div className="flex justify-between items-center mb-6">
             <h4 className="text-xl font-bold text-white border-l-4 border-red-500 pl-2 uppercase">Phim đang chiếu</h4>
@@ -77,7 +77,7 @@ const MovieList = ({
 
   if (error) {
     return (
-      <section className={`trending-now py-10 ${sectionClass}`}>
+      <section className={`trending-now ${sectionClass}`}>
         <div className="container mx-auto">
           <div className="text-center text-red-500">{error}</div>
         </div>
@@ -86,7 +86,7 @@ const MovieList = ({
   }
 
   return (
-    <section className={`trending-now py-10 ${sectionClass}`}>
+    <section className={`trending-now ${sectionClass}`}>
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h4 className="text-xl font-bold text-white border-l-4 border-red-500 pl-2 uppercase">Phim đang chiếu</h4>

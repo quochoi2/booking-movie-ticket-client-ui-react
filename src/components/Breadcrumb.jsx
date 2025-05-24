@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 
-const Breadcrumb = ({ title }) => {
+const Breadcrumb = ({ items = ['Danh mục', 'Tình cảm'] }) => {
   return (
     <div className="breadcrumb-option">
       <div className="container">
@@ -14,10 +14,12 @@ const Breadcrumb = ({ title }) => {
                   <FontAwesomeIcon icon={faHome} className='mr-2'/> Trang chủ
                 </Link>
               </div>
-              <span className="text-gray-400">&gt;</span>
-              <Link to="/categories" className="text-white hover:underline mr-2">Danh mục</Link>
-              <span className="text-gray-400 ml-2">&gt;</span>
-              <span className="text-gray-500">Tình cảm</span>
+              {items.map((item, index) => (
+                <div key={index} className="flex items-center">
+                  <span className="text-gray-400">&gt;</span>
+                  <span className="text-white hover:underline ml-2">{item}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
