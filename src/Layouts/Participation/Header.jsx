@@ -112,6 +112,15 @@ const Header = ({ props }) => {
                     Hồ sơ
                   </button>
                   <button
+                    onClick={() => {
+                      navigate('/favorite');
+                      setDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Yêu thích
+                  </button>
+                  <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   >
