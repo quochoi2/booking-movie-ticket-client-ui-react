@@ -10,12 +10,17 @@ import { useParams } from 'react-router-dom'
 import { formatDate } from '../../utils/FormatDate'
 import Loading from '../../components/Loading'
 import { useOrder } from '../../contexts/OrderContext'
+import FavoriteService from '../../services/favoriteService'
 
 const Detail = () => {
   const { movieId } = useParams()
   const [movie, setMovie] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  // favorite
+  const [isFavorite, setIsFavorite] = useState(false) // Thêm state này
+  const [favoriteLoading, setFavoriteLoading] = useState(false) // Thêm state này
 
   // luu movie
   const { updateOrderData } = useOrder()
@@ -31,6 +36,8 @@ const Detail = () => {
           movieId: Number(movieId),
           title: response.data.title,
         })
+        // Kiểm tra phim yêu thích sau khi lấy thông tin phim
+        checkFavoriteStatus(movieId);
       } catch (err) {
         setError(err.message || 'Lỗi khi tải dữ liệu phim')
       } finally {
@@ -42,6 +49,56 @@ const Detail = () => {
       fetchMovie()
     }
   }, [movieId])
+
+  // Hàm kiểm tra trạng thái yêu thích
+  const checkFavoriteStatus = async (movieId) => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return
+    
+    try {
+      setFavoriteLoading(true)
+      const response = await FavoriteService.checkFavorite(movieId)
+      // console.log(response);
+      setIsFavorite(response.data.isFavorite)
+    } catch (error) {
+      console.error('Error checking favorite status:', error)
+    } finally {
+      setFavoriteLoading(false)
+    }
+  }
+
+  // Hàm xử lý thêm/xóa yêu thích
+  const handleFavoriteClick = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      alert('Bạn cần phải đăng nhập để sử dụng tính năng này')
+      return
+    }
+
+    try {
+      setFavoriteLoading(true)
+
+      // Thêm delay 2 giây
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      if (isFavorite) {
+        // Nếu đã yêu thích thì xóa
+        await FavoriteService.deleteFavorite(movieId)
+        setIsFavorite(false)
+        alert('Đã bỏ lưu vào danh sách yêu thích');
+      } else {
+        // Nếu chưa yêu thích thì thêm
+        await FavoriteService.addFavorite({ movieId: Number(movieId) })
+        setIsFavorite(true)
+        alert('Đã lưu vào danh sách yêu thích');
+      }
+    } catch (error) {
+      console.error('Error updating favorite:', error)
+      alert('Có lỗi xảy ra khi cập nhật yêu thích')
+    } finally {
+      setFavoriteLoading(false)
+    }
+  }
 
   if (loading) return <Loading />
   if (error) return <div className="text-center py-8 text-red-500">{error}</div>
@@ -112,7 +169,22 @@ const Detail = () => {
                       </div>
                     </div>
                     <div className="anime__details__btn flex space-x-4 mt-4">
-                      <button className="follow-btn bg-red-500 text-white py-2 px-4 rounded cursor-pointer"><FontAwesomeIcon icon={faHeart} /> Yêu thích</button>
+                      <button 
+                        onClick={handleFavoriteClick}
+                        disabled={favoriteLoading}
+                        className={`follow-btn ${isFavorite ? 'bg-green-500' : 'bg-red-500'} text-white py-2 px-4 rounded cursor-pointer`}
+                      >
+                        {favoriteLoading ? (
+                          <div className="flex items-center justify-center">
+                            <span>Đang xử lý...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <FontAwesomeIcon icon={faHeart} className="mr-2" />
+                            <span>{isFavorite ? 'Đã thêm' : 'Yêu thích'}</span>
+                          </>
+                        )}
+                      </button>
                       <button className="follow-btn bg-blue-500 text-white py-2 px-4 rounded cursor-pointer"><span>Đặt vé ngay</span></button>
                     </div>
                   </div>

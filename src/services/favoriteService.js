@@ -14,6 +14,11 @@ const FavoriteService = {
   // delete favorite
   deleteFavorite: async (movieId) => {
     return await requestApiJson.delete(`/favorite/${movieId}`)
+  },
+
+  // check favorite 
+  checkFavorite: async (movieId) => {
+    return await requestApiJson.get(`/favorite/check-favorite?movieId=${movieId}`)
   }
 }
 
