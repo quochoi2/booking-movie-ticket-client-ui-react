@@ -23,14 +23,31 @@ export const OrderProvider = ({ children }) => {
   });
 
   // Lấy email từ token khi khởi tạo
+  // useEffect(() => {
+  //   const token = localStorage.getItem('accessToken');
+  //   if (token) {
+  //     try {
+  //       const decoded = jwtDecode(token);
+  //       updateOrderData({ userId: decoded.id, email: decoded.email, name: decoded.fullname });
+  //     } catch (error) {
+  //       console.error('Error decoding accessToken:', error);
+  //     }
+  //   }
+  // }, []);
+
+  // Lấy thông tin user từ localStorage khi khởi tạo
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
+    const userData = localStorage.getItem('user');
+    if (userData) {
       try {
-        const decoded = jwtDecode(token);
-        updateOrderData({ userId: decoded.id, email: decoded.email, name: decoded.fullname });
+        const user = JSON.parse(userData);
+        updateOrderData({ 
+          userId: user.id, 
+          email: user.email, 
+          name: user.fullname || user.name 
+        });
       } catch (error) {
-        console.error('Error decoding accessToken:', error);
+        console.error('Error parsing user data:', error);
       }
     }
   }, []);

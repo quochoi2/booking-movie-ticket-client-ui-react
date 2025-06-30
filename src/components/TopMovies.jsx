@@ -93,7 +93,7 @@ const TopMovies = ({ className = '' }) => {
                 title={movie.title}
                 image={movie.image}
                 episodes={movie.episodes}
-                views={movie.views}
+                // views={movie.views}
               />
             ))}
           </div>
