@@ -9,8 +9,8 @@ import StatisticService from "../services/statisticService";
 //   { title: "Fate/stay night: Heaven's Feel I. presage flower", image: "/img/sidebar/tv-4.jpg" },
 // ]
 
-const TopMovies = ({ className = '' }) => {
-  const [activeTab, setActiveTab] = useState('week');
+const TopMovies = ({ className = "" }) => {
+  const [activeTab, setActiveTab] = useState("year");
   const [topMovies, setTopMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,18 +18,18 @@ const TopMovies = ({ className = '' }) => {
     const fetchTopMovies = async () => {
       try {
         setLoading(true);
-        
+
         // Gọi API (tự động sử dụng cache nếu có)
         const response = await StatisticService.topMovieByWeekMonthYear();
         const data = response.data;
-        
+
         // Xử lý dữ liệu như cũ
         let movies = [];
-        if (activeTab === 'week') movies = data.weekly.data;
-        else if (activeTab === 'month') movies = data.monthly.data;
-        else if (activeTab === 'year') movies = data.yearly.data;
+        if (activeTab === "week") movies = data.weekly.data;
+        else if (activeTab === "month") movies = data.monthly.data;
+        else if (activeTab === "year") movies = data.yearly.data;
 
-        const formattedMovies = movies.slice(0, 5).map(movie => ({
+        const formattedMovies = movies.slice(0, 5).map((movie) => ({
           id: movie.movieId,
           title: movie.title,
           image: movie.image,
@@ -53,27 +53,41 @@ const TopMovies = ({ className = '' }) => {
       <div className="container mx-auto max-w-screen-lg">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center mr-[30px]">
-            <h4 className="text-xl font-bold text-white border-l-4 border-red-500 pl-2 uppercase">Phim hot</h4>
+            <h4 className="text-xl font-bold text-white border-l-4 border-red-500 pl-2 uppercase">
+              Phim hot
+            </h4>
           </div>
           <ul className="flex space-x-4 text-white text-sm">
             <li
-              style={{ userSelect: 'none' }} 
-              className={`cursor-pointer ${activeTab === 'week' ? 'text-[#d33b3b]' : 'text-[#b7b7b7] hover:text-white'}`}
-              onClick={() => setActiveTab('week')}
+              style={{ userSelect: "none" }}
+              className={`cursor-pointer ${
+                activeTab === "week"
+                  ? "text-[#d33b3b]"
+                  : "text-[#b7b7b7] hover:text-white"
+              }`}
+              onClick={() => setActiveTab("week")}
             >
               Tuần
             </li>
             <li
-              style={{ userSelect: 'none' }} 
-              className={`cursor-pointer ${activeTab === 'month' ? 'text-[#d33b3b]' : 'text-[#b7b7b7] hover:text-white'}`}
-              onClick={() => setActiveTab('month')}
+              style={{ userSelect: "none" }}
+              className={`cursor-pointer ${
+                activeTab === "month"
+                  ? "text-[#d33b3b]"
+                  : "text-[#b7b7b7] hover:text-white"
+              }`}
+              onClick={() => setActiveTab("month")}
             >
               Tháng
             </li>
             <li
-              style={{ userSelect: 'none' }} 
-              className={`cursor-pointer ${activeTab === 'year' ? 'text-[#d33b3b]' : 'text-[#b7b7b7] hover:text-white'}`}
-              onClick={() => setActiveTab('year')}
+              style={{ userSelect: "none" }}
+              className={`cursor-pointer ${
+                activeTab === "year"
+                  ? "text-[#d33b3b]"
+                  : "text-[#b7b7b7] hover:text-white"
+              }`}
+              onClick={() => setActiveTab("year")}
             >
               Năm
             </li>
@@ -87,7 +101,7 @@ const TopMovies = ({ className = '' }) => {
         ) : topMovies.length > 0 ? (
           <div className={`${className}`}>
             {topMovies.map((movie, index) => (
-              <ViewCard 
+              <ViewCard
                 key={movie.id || index}
                 id={movie.id}
                 title={movie.title}
@@ -104,7 +118,7 @@ const TopMovies = ({ className = '' }) => {
         )}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default TopMovies
+export default TopMovies;
