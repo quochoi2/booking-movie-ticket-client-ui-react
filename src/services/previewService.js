@@ -1,4 +1,4 @@
-import { requestApiJson } from "../utils/requestApi"
+import { requestApiJson } from '../utils/requestApi'
 
 const PreviewService = {
   getAllPreviewByMovie: async (movieId) => {

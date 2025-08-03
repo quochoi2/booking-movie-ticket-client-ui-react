@@ -1,9 +1,11 @@
-import { requestApiJson } from "../utils/requestApi"
+import { requestApiJson } from '../utils/requestApi'
 
 const FavoriteService = {
   // search movie
   getAllMovieByUser: async (page = 1, limit = 5) => {
-    return await requestApiJson.get(`/favorite/get-all-movies-by-user?page=${page}&limit=${limit}`)
+    return await requestApiJson.get(
+      `/favorite/get-all-movies-by-user?page=${page}&limit=${limit}`
+    )
   },
 
   // get all movie
@@ -16,9 +18,11 @@ const FavoriteService = {
     return await requestApiJson.delete(`/favorite/${movieId}`)
   },
 
-  // check favorite 
+  // check favorite
   checkFavorite: async (movieId) => {
-    return await requestApiJson.get(`/favorite/check-favorite?movieId=${movieId}`)
+    return await requestApiJson.get(
+      `/favorite/check-favorite?movieId=${movieId}`
+    )
   }
 }
 

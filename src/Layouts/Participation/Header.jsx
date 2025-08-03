@@ -1,45 +1,51 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faUser, faBars, faTimes } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBell,
+  faUser,
+  faBars,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../contexts/UserContext'
 import Search from '../../components/Search'
 import AuthService from '../../services/authService'
+import Notification from '../../components/Notification'
 
 const Header = ({ props }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [user, setUser] = useState(null); // Thêm state cho user
-  const dropdownRef = useRef(null);
-  const { isAuthenticated, logout } = useContext(UserContext);
-  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [user, setUser] = useState(null) // Thêm state cho user
+  const dropdownRef = useRef(null)
+  const { isAuthenticated, logout } = useContext(UserContext)
+  const navigate = useNavigate()
 
   // Thêm useEffect để lấy thông tin user từ localStorage khi component mount
   useEffect(() => {
-    const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem('user')
     if (userData) {
-      setUser(JSON.parse(userData));
+      setUser(JSON.parse(userData))
     }
-  }, [isAuthenticated]); // Chạy lại khi trạng thái isAuthenticated thay đổi
+  }, [isAuthenticated]) // Chạy lại khi trạng thái isAuthenticated thay đổi
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const toggleMenu = () => setMenuOpen(!menuOpen)
 
   const handleLogout = () => {
-    AuthService.logout();
-    logout();
-    setUser(null); // Xóa thông tin user khi logout
-    navigate('/login');
-  };
+    AuthService.logout()
+    logout()
+    setUser(null) // Xóa thông tin user khi logout
+    navigate('/login')
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
+        setDropdownOpen(false)
       }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <header className="bg-[#070720] text-white font-['\Mulish\'] font-medium">
@@ -50,41 +56,37 @@ const Header = ({ props }) => {
           </Link>
         </div>
 
-        <nav className={`lg:flex ${menuOpen ? 'block' : 'hidden'} absolute lg:relative w-full lg:w-auto top-16 left-0 lg:top-auto lg:left-auto`}>
+        <nav
+          className={`lg:flex ${menuOpen ? 'block' : 'hidden'} absolute lg:relative w-full lg:w-auto top-16 left-0 lg:top-auto lg:left-auto`}
+        >
           <ul className="flex flex-col lg:flex-row lg:space-x-8 items-center">
             <li>
               <h5 className="text-white font-bold text-sm">
-                <Link to={'/'}>
-                  Trang chủ
-                </Link>
+                <Link to={'/'}>Trang chủ</Link>
               </h5>
             </li>
             <li>
               <h5 className="text-white font-bold text-sm">
-                <Link to={'/movie'}>
-                  Phim
-                </Link>
+                <Link to={'/movie'}>Phim</Link>
               </h5>
             </li>
             <li>
               <h5 className="text-white font-bold text-sm">
-                <Link to={'/blog'}>
-                  Bài viết
-                </Link>
+                <Link to={'/blog'}>Bài viết</Link>
               </h5>
             </li>
             <li>
               <h5 className="text-white font-bold text-sm">
-                <Link to={'/'}>
-                  Liên hệ
-                </Link>
-              </h5>            
+                <Link to={'/'}>Liên hệ</Link>
+              </h5>
             </li>
           </ul>
         </nav>
 
         <div className="flex items-center space-x-4 gap-3">
           <Search />
+
+          <Notification />
 
           {isAuthenticated ? (
             <div className="relative" ref={dropdownRef}>
@@ -97,15 +99,17 @@ const Header = ({ props }) => {
                   alt="Avatar"
                   className="w-8 h-8 rounded-full object-cover border border-white cursor-pointer"
                 />
-                <span className="hidden lg:inline text-sm">{user?.fullname || user?.username}</span>
+                <span className="hidden lg:inline text-sm">
+                  {user?.fullname || user?.username}
+                </span>
               </button>
 
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow-lg z-50">
                   <button
                     onClick={() => {
-                      navigate('/profile');
-                      setDropdownOpen(false);
+                      navigate('/profile')
+                      setDropdownOpen(false)
                     }}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   >
@@ -113,8 +117,8 @@ const Header = ({ props }) => {
                   </button>
                   <button
                     onClick={() => {
-                      navigate('/favorite');
-                      setDropdownOpen(false);
+                      navigate('/favorite')
+                      setDropdownOpen(false)
                     }}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   >

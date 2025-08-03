@@ -1,74 +1,73 @@
-import { useState, useEffect } from 'react';
-import { useOrder } from '../../contexts/OrderContext';
-import DetailService from '../../services/movieDetailService';
-import CheckoutModal from './CheckoutModal';
+import { useState, useEffect } from 'react'
+import { useOrder } from '../../contexts/OrderContext'
+import DetailService from '../../services/movieDetailService'
+import CheckoutModal from './CheckoutModal'
 
 const ServiceModal = ({ onClose, onConfirm }) => {
-  const [foods, setFoods] = useState([]);
-  const [selectedServices, setSelectedServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { orderData, updateOrderData } = useOrder();
+  const [foods, setFoods] = useState([])
+  const [selectedServices, setSelectedServices] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const { orderData, updateOrderData } = useOrder()
 
   // checkout moda l
-  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false)
 
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        setLoading(true);
-        const response = await DetailService.getFoods();
-        setFoods(response.data.data);
-        setError(null);
+        setLoading(true)
+        const response = await DetailService.getFoods()
+        setFoods(response.data.data)
+        setError(null)
       } catch (err) {
-        setError('Không thể tải danh sách dịch vụ. Vui lòng thử lại.');
-        console.error('Error fetching foods:', err);
+        setError('Không thể tải danh sách dịch vụ. Vui lòng thử lại.')
+        console.error('Error fetching foods:', err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchFoods();
-  }, []);
+    fetchFoods()
+  }, [])
 
   const toggleServiceSelection = (food) => {
-    setSelectedServices(prev => {
-      const existingItem = prev.find(item => item.id === food.id);
-      
+    setSelectedServices((prev) => {
+      const existingItem = prev.find((item) => item.id === food.id)
+
       if (existingItem) {
         // Nếu đã có thì tăng số lượng
-        return prev.map(item => 
-          item.id === food.id 
-            ? { ...item, quantity: item.quantity + 1 } 
-            : item
-        );
+        return prev.map((item) =>
+          item.id === food.id ? { ...item, quantity: item.quantity + 1 } : item
+        )
       } else {
         // Nếu chưa có thì thêm mới với quantity = 1
-        return [...prev, { ...food, quantity: 1 }];
+        return [...prev, { ...food, quantity: 1 }]
       }
-    });
-  };
+    })
+  }
 
   const decreaseQuantity = (foodId) => {
-    setSelectedServices(prev => {
-      const existingItem = prev.find(item => item.id === foodId);
-      
+    setSelectedServices((prev) => {
+      const existingItem = prev.find((item) => item.id === foodId)
+
       if (existingItem && existingItem.quantity > 1) {
-        return prev.map(item => 
-          item.id === foodId 
-            ? { ...item, quantity: item.quantity - 1 } 
-            : item
-        );
+        return prev.map((item) =>
+          item.id === foodId ? { ...item, quantity: item.quantity - 1 } : item
+        )
       } else {
         // Nếu quantity = 1 thì xóa khỏi danh sách
-        return prev.filter(item => item.id !== foodId);
+        return prev.filter((item) => item.id !== foodId)
       }
-    });
-  };
+    })
+  }
 
   const calculateServiceTotal = () => {
-    return selectedServices.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  };
+    return selectedServices.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    )
+  }
 
   const handleConfirm = () => {
     // Cập nhật vào context
@@ -76,20 +75,21 @@ const ServiceModal = ({ onClose, onConfirm }) => {
       services: selectedServices,
       totalServicePrice: calculateServiceTotal(),
       totalPrice: orderData.totalSeatPrice + calculateServiceTotal()
-    });
-    
-    setShowCheckoutModal(true); 
-  };
+    })
+
+    setShowCheckoutModal(true)
+  }
 
   return (
-    <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 p-4"
+    <div
+      className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 p-4"
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
     >
       <div className="bg-gray-800 text-white rounded-lg max-w-4xl w-full max-h-[80vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Dịch vụ</h2>
-            <button 
+            <button
               onClick={onClose}
               className="cursor-pointer user-select-none text-gray-400 hover:text-white text-2xl"
             >
@@ -106,26 +106,31 @@ const ServiceModal = ({ onClose, onConfirm }) => {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                {foods.map(food => (
-                  <div 
-                    key={food.id} 
+                {foods.map((food) => (
+                  <div
+                    key={food.id}
                     className="border border-gray-600 rounded-lg p-4 hover:bg-gray-700 transition"
                   >
                     <h3 className="font-semibold text-lg">{food.name}</h3>
-                    <p className="text-gray-300 mb-2">{food.price.toLocaleString()}đ</p>
+                    <p className="text-gray-300 mb-2">
+                      {food.price.toLocaleString()}đ
+                    </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <button 
+                        <button
                           onClick={() => decreaseQuantity(food.id)}
                           className="cursor-pointer user-select-none px-2 py-1 bg-gray-600 rounded hover:bg-gray-500"
-                          disabled={!selectedServices.some(s => s.id === food.id)}
+                          disabled={
+                            !selectedServices.some((s) => s.id === food.id)
+                          }
                         >
                           -
                         </button>
                         <span>
-                          {selectedServices.find(s => s.id === food.id)?.quantity || 0}
+                          {selectedServices.find((s) => s.id === food.id)
+                            ?.quantity || 0}
                         </span>
-                        <button 
+                        <button
                           onClick={() => toggleServiceSelection(food)}
                           className="cursor-pointer user-select-none px-2 py-1 bg-blue-600 rounded hover:bg-blue-500"
                         >
@@ -143,8 +148,11 @@ const ServiceModal = ({ onClose, onConfirm }) => {
                 {selectedServices.length > 0 ? (
                   <>
                     <div className="space-y-2">
-                      {selectedServices.map(item => (
-                        <div key={item.id} className="flex justify-between items-center">
+                      {selectedServices.map((item) => (
+                        <div
+                          key={item.id}
+                          className="flex justify-between items-center"
+                        >
                           <span>
                             {item.name} x {item.quantity}
                           </span>
@@ -186,7 +194,7 @@ const ServiceModal = ({ onClose, onConfirm }) => {
       {showCheckoutModal && (
         <CheckoutModal
           onClose={() => {
-            setShowCheckoutModal(false);
+            setShowCheckoutModal(false)
           }}
           onConfirmPayment={(paymentMethod) => {
             // Xử lý thanh toán ở đây
@@ -196,7 +204,7 @@ const ServiceModal = ({ onClose, onConfirm }) => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ServiceModal;
+export default ServiceModal

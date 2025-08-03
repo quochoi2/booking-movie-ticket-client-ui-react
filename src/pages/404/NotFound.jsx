@@ -1,8 +1,7 @@
-
 import './notFound.css'
 
 const NotFound = () => {
-  return (  
+  return (
     <div className="not-found-container1">
       <h3>OOPS! KHÔNG TÌM THẤY TRANG</h3>
       <div className="not-found-container2">
@@ -16,5 +15,5 @@ const NotFound = () => {
     </div>
   )
 }
- 
+
 export default NotFound

@@ -1,4 +1,4 @@
-import { requestApiPublic } from "../utils/requestApi"
+import { requestApiPublic } from '../utils/requestApi'
 
 const DetailService = {
   // get all movie
@@ -8,7 +8,9 @@ const DetailService = {
 
   // get seats by cinemaId
   getSeatbyCinemaId: async (cinemaId, showtimeId) => {
-    return await requestApiPublic.get(`/seat/public/by-cinema/${cinemaId}?showtimeId=${showtimeId}`)
+    return await requestApiPublic.get(
+      `/seat/public/by-cinema/${cinemaId}?showtimeId=${showtimeId}`
+    )
   },
 
   // get foods

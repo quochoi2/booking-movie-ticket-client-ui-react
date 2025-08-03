@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import SeatModal from '../pages/Detail/SeatModal.jsx'
-import { useOrder } from '../contexts/OrderContext.jsx';
+import { useOrder } from '../contexts/OrderContext.jsx'
 
 const Showtime = ({ showtimes = [] }) => {
   // luu thong tin phim
@@ -13,33 +13,36 @@ const Showtime = ({ showtimes = [] }) => {
     const diffToMonday = (currentWeekday + 6) % 7
     const monday = new Date(today)
     monday.setDate(today.getDate() - diffToMonday)
-  
+
     for (let i = 0; i < 7; i++) {
       const date = new Date(monday)
       date.setDate(monday.getDate() + i)
-  
+
       const dayName = date.toLocaleDateString('vi-VN', { weekday: 'long' })
-      const dateString = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })
-  
+      const dateString = date.toLocaleDateString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit'
+      })
+
       days.push({
         day: dayName.charAt(0).toUpperCase() + dayName.slice(1),
         date: dateString,
         fullDate: date.toISOString()
       })
     }
-  
+
     return days
   }
 
   const getUniqueCinemas = () => {
     const cinemasMap = new Map()
 
-    showtimes.forEach(st => {
+    showtimes.forEach((st) => {
       if (st.Cinema && !cinemasMap.has(st.Cinema.id)) {
         cinemasMap.set(st.Cinema.id, {
           id: st.Cinema.id,
           name: st.Cinema.name,
-          address: st.Cinema.address,
+          address: st.Cinema.address
         })
       }
     })
@@ -62,17 +65,21 @@ const Showtime = ({ showtimes = [] }) => {
     }
   }, [allDays, allCinemas])
 
-  const filteredShowtimes = showtimes.filter(st => {
+  const filteredShowtimes = showtimes.filter((st) => {
     if (!selectedDay || !selectedCinema) return false
-    const showtimeDate = new Date(st.timeStart).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })
-    const cinemaMatch = selectedCinema.id === 'all' || st.Cinema.id === selectedCinema.id
+    const showtimeDate = new Date(st.timeStart).toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit'
+    })
+    const cinemaMatch =
+      selectedCinema.id === 'all' || st.Cinema.id === selectedCinema.id
     const dateMatch = selectedDay.date === showtimeDate
     return cinemaMatch && dateMatch
   })
 
   const groupByCinema = (list) => {
     const map = new Map()
-    list.forEach(st => {
+    list.forEach((st) => {
       const id = st.Cinema.id
       if (!map.has(id)) {
         map.set(id, { cinema: st.Cinema, times: [] })
@@ -84,7 +91,10 @@ const Showtime = ({ showtimes = [] }) => {
 
   const formatTime = (timeString) => {
     const time = new Date(timeString)
-    return time.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+    return time.toLocaleTimeString('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
 
   // seats
@@ -93,36 +103,39 @@ const Showtime = ({ showtimes = [] }) => {
   const handleSelectShowtime = (st, cinema) => {
     // Tạo đối tượng ngày từ timeStart
     const showtimeDate = new Date(st.timeStart)
-    const formattedDate = showtimeDate.toLocaleDateString('vi-VN', { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric' 
+    const formattedDate = showtimeDate.toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
     })
-    
+
     // Tạo đối tượng giờ chiếu
-    const formattedTime = formatTime(st.timeStart) + ' - ' + formatTime(st.timeEnd)
-    
+    const formattedTime =
+      formatTime(st.timeStart) + ' - ' + formatTime(st.timeEnd)
+
     // Cập nhật vào context
     updateOrderData({
       cinema: cinema.name,
       cinemaId: cinema.id,
       date: formattedDate,
       showtime: formattedTime,
-      showtimeId: st.id,
+      showtimeId: st.id
       // Có thể thêm các trường khác nếu cần
     })
-    
+
     // Mở modal chọn ghế
-    setSelectedShowtime({ 
-      cinemaId: cinema.id, 
-      showtimeId: st.id 
+    setSelectedShowtime({
+      cinemaId: cinema.id,
+      showtimeId: st.id
     })
   }
 
   return (
     <div className="text-white">
       <div className="flex items-center mb-5">
-        <h4 className="text-xl font-bold text-white border-l-4 border-red-500 pl-2 uppercase">Lịch chiếu</h4>
+        <h4 className="text-xl font-bold text-white border-l-4 border-red-500 pl-2 uppercase">
+          Lịch chiếu
+        </h4>
       </div>
 
       {/* Chọn ngày */}
@@ -132,7 +145,9 @@ const Showtime = ({ showtimes = [] }) => {
             key={day.date}
             onClick={() => setSelectedDay(day)}
             className={`px-4 py-2 rounded cursor-pointer ${
-              selectedDay?.date === day.date ? 'bg-red-500' : 'bg-gray-300 text-black'
+              selectedDay?.date === day.date
+                ? 'bg-red-500'
+                : 'bg-gray-300 text-black'
             }`}
           >
             {day.day} - {day.date}
@@ -147,7 +162,9 @@ const Showtime = ({ showtimes = [] }) => {
             key={cinema.id}
             onClick={() => setSelectedCinema(cinema)}
             className={`px-4 py-2 rounded cursor-pointer ${
-              selectedCinema?.id === cinema.id ? 'bg-red-500' : 'bg-gray-300 text-black'
+              selectedCinema?.id === cinema.id
+                ? 'bg-red-500'
+                : 'bg-gray-300 text-black'
             }`}
           >
             {cinema.name}
@@ -158,10 +175,13 @@ const Showtime = ({ showtimes = [] }) => {
       {/* Danh sách lịch chiếu */}
       {filteredShowtimes.length > 0 ? (
         groupByCinema(filteredShowtimes).map(({ cinema, times }) => (
-          <div key={cinema.id} className="bg-gray-800 text-white p-5 rounded-lg mb-4">
-            <div className='relative'>
-              <div className='absolute top-0 right-0'>
-                <a 
+          <div
+            key={cinema.id}
+            className="bg-gray-800 text-white p-5 rounded-lg mb-4"
+          >
+            <div className="relative">
+              <div className="absolute top-0 right-0">
+                <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cinema.name + ' ' + cinema.address || '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -174,10 +194,11 @@ const Showtime = ({ showtimes = [] }) => {
             </div>
             <p>{cinema.address}</p>
             <div className="flex flex-wrap gap-2 mt-2">
-              {times.map(st => (
-                <div 
+              {times.map((st) => (
+                <div
                   onClick={() => handleSelectShowtime(st, cinema)}
-                  key={st.id} className="bg-gray-200 text-black p-2 rounded cursor-pointer" 
+                  key={st.id}
+                  className="bg-gray-200 text-black p-2 rounded cursor-pointer"
                   style={{ userSelect: 'none' }}
                 >
                   {formatTime(st.timeStart)} ~ {formatTime(st.timeEnd)}

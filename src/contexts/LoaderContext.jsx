@@ -4,12 +4,12 @@ import { useLocation } from 'react-router-dom'
 const LoaderContext = createContext()
 
 const LoaderProvider = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    const handleStart = () => setIsLoading(true);
+    const handleStart = () => setIsLoading(true)
     const handleComplete = () => setTimeout(() => setIsLoading(false), 1000)
-  
+
     handleStart()
     handleComplete()
   }, [useLocation()])
@@ -24,4 +24,3 @@ const LoaderProvider = ({ children }) => {
 const useLoader = () => useContext(LoaderContext)
 
 export { LoaderProvider, useLoader }
-

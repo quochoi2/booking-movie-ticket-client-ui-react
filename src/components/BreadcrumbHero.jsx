@@ -1,7 +1,7 @@
 const BreadcrumbHero = ({ title, description }) => {
   return (
-    <section 
-      className="relative bg-cover bg-center h-[300px] flex items-center justify-center" 
+    <section
+      className="relative bg-cover bg-center h-[300px] flex items-center justify-center"
       style={{ backgroundImage: "url('/img/normal-breadcrumb.jpg')" }}
     >
       <div className="text-center text-white">

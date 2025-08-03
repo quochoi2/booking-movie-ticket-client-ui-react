@@ -1,48 +1,48 @@
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import BreadcrumbHero from "../../components/BreadcrumbHero";
-import AuthService from "../../services/authService";
-import { UserContext } from "../../contexts/UserContext";
-import secret from "../../secret";
+import React, { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import BreadcrumbHero from '../../components/BreadcrumbHero'
+import AuthService from '../../services/authService'
+import { UserContext } from '../../contexts/UserContext'
+import secret from '../../secret'
 
 const Login = () => {
-  const { login, user } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { login, user } = useContext(UserContext)
+  const navigate = useNavigate()
 
-  const [username, setUsername] = useState("nguyend");
-  const [password, setPassword] = useState("222222");
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState('nguyend')
+  const [password, setPassword] = useState('222222')
+  const [error, setError] = useState('')
 
   const handleLocalLogin = async (e) => {
-    e.preventDefault();
-    setError("");
+    e.preventDefault()
+    setError('')
 
     try {
-      const userData = await AuthService.loginWithLocal(username, password);
+      const userData = await AuthService.loginWithLocal(username, password)
       // console.log(userData);
-      login(userData);
-      navigate("/");
-      alert("Đăng nhập thành công");
+      login(userData)
+      navigate('/')
+      alert('Đăng nhập thành công')
     } catch (error) {
-      setError("Đăng nhập thất bại, vui lòng kiểm tra lại!");
-      console.error("Lỗi đăng nhập:", error);
+      setError('Đăng nhập thất bại, vui lòng kiểm tra lại!')
+      console.error('Lỗi đăng nhập:', error)
     }
-  };
+  }
 
   const handleGoogleLogin = async () => {
     try {
-      window.location.href = secret.API + "/provide/google";
+      window.location.href = secret.API + '/provide/google'
     } catch (error) {
-      console.error("Lỗi đăng nhập Google:", error);
+      console.error('Lỗi đăng nhập Google:', error)
     }
-  };
+  }
 
   return (
     <>
       <BreadcrumbHero
-        title={"Đăng nhập"}
+        title={'Đăng nhập'}
         description={
-          "Chào mừng bạn đến với nơi của những người yêu thích điện ảnh."
+          'Chào mừng bạn đến với nơi của những người yêu thích điện ảnh.'
         }
       />
       <section className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
@@ -52,7 +52,7 @@ const Login = () => {
               <div className="bg-gray-800 p-8 rounded-md">
                 <h3
                   className="text-2xl font-bold"
-                  style={{ marginBottom: "15px" }}
+                  style={{ marginBottom: '15px' }}
                 >
                   Đăng nhập
                 </h3>
@@ -84,7 +84,7 @@ const Login = () => {
                   </button>
                 </form>
                 <a
-                  style={{ marginTop: "15px" }}
+                  style={{ marginTop: '15px' }}
                   className="text-sm text-gray-400 hover:text-white mt-4 block text-center"
                 >
                   Quên mật khẩu?
@@ -94,7 +94,7 @@ const Login = () => {
             <div className="w-full lg:w-1/2 flex flex-col items-center justify-center">
               <h3
                 className="text-2xl font-bold mb-4"
-                style={{ marginBottom: "15px" }}
+                style={{ marginBottom: '15px' }}
               >
                 Không có tài khoản?
               </h3>
@@ -138,7 +138,7 @@ const Login = () => {
         </div>
       </section>
     </>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

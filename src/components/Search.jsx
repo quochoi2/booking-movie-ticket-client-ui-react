@@ -1,72 +1,75 @@
-import { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
-import useDebounce from '../hooks/useDebounce';
-import HomeService from '../services/homeService';
+import { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { useNavigate } from 'react-router-dom'
+import useDebounce from '../hooks/useDebounce'
+import HomeService from '../services/homeService'
 
 const Search = () => {
-  const [showSearchBar, setShowSearchBar] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
-  const debouncedSearchTerm = useDebounce(searchQuery, 500);
-  const navigate = useNavigate();
+  const [showSearchBar, setShowSearchBar] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
+  const debouncedSearchTerm = useDebounce(searchQuery, 500)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      fetchSearchResults(debouncedSearchTerm);
-      setIsTyping(false);
+      fetchSearchResults(debouncedSearchTerm)
+      setIsTyping(false)
     } else {
-      setSearchResults([]);
-      setIsTyping(false);
+      setSearchResults([])
+      setIsTyping(false)
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm])
 
   const fetchSearchResults = async (query) => {
     try {
-      setIsLoading(true);
-      const response = await HomeService.getAllMovieWithSearch(query);
-      setSearchResults(response.data.data || []);
+      setIsLoading(true)
+      const response = await HomeService.getAllMovieWithSearch(query)
+      setSearchResults(response.data.data || [])
     } catch (error) {
-      console.error('Search error:', error);
-      setSearchResults([]); 
+      console.error('Search error:', error)
+      setSearchResults([])
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-      resetSearch();
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`)
+      resetSearch()
     }
-  };
+  }
 
   const resetSearch = () => {
-    setSearchQuery('');
-    setSearchResults([]);
-    setShowSearchBar(false);
-    setIsTyping(false);
-  };
+    setSearchQuery('')
+    setSearchResults([])
+    setShowSearchBar(false)
+    setIsTyping(false)
+  }
 
   const handleMovieClick = (movie) => {
-    navigate(`/detail/${movie.slug || movie.id}`);
-    resetSearch();
-  };
+    navigate(`/detail/${movie.slug || movie.id}`)
+    resetSearch()
+  }
 
   const handleInputChange = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    setIsTyping(value.length > 0);
-  };
+    const value = e.target.value
+    setSearchQuery(value)
+    setIsTyping(value.length > 0)
+  }
 
   return (
     <div className="relative">
       {showSearchBar ? (
-        <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-md p-1">
+        <form
+          onSubmit={handleSearchSubmit}
+          className="flex items-center bg-white rounded-md p-1"
+        >
           <input
             type="text"
             value={searchQuery}
@@ -107,22 +110,38 @@ const Search = () => {
                   alt={movie.title}
                   className="w-12 h-16 object-cover rounded"
                   onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = '/default-movie-image.jpg';
+                    e.target.onerror = null
+                    e.target.src = '/default-movie-image.jpg'
                   }}
                 />
               </div>
               <div className="flex-grow overflow-hidden">
-                <h4 className="font-medium truncate text-black text-lg" style={{ color: 'black', fontSize: '18px', height: '24px' }}>
+                <h4
+                  className="font-medium truncate text-black text-lg"
+                  style={{ color: 'black', fontSize: '18px', height: '24px' }}
+                >
                   {movie.title}
                 </h4>
-                <p className="text-black text-xs my-1" style={{ color: 'black', fontSize: '14px', margin: 0, height: '24px' }}>
+                <p
+                  className="text-black text-xs my-1"
+                  style={{
+                    color: 'black',
+                    fontSize: '14px',
+                    margin: 0,
+                    height: '24px'
+                  }}
+                >
                   Thời lượng: {movie.duration} phút
                 </p>
                 <div className="flex items-center text-xs">
-                  <span className="text-black" style={{ color: 'black' }}>{movie.studio}</span>
+                  <span className="text-black" style={{ color: 'black' }}>
+                    {movie.studio}
+                  </span>
                   {movie.score && (
-                    <span className="ml-2 text-yellow-500 font-medium" style={{ color: 'black' }}>
+                    <span
+                      className="ml-2 text-yellow-500 font-medium"
+                      style={{ color: 'black' }}
+                    >
                       ★ {movie.score.toFixed(1)}
                     </span>
                   )}
@@ -148,13 +167,17 @@ const Search = () => {
       )}
 
       {/* Không tìm thấy phim */}
-      {showSearchBar && !isLoading && !isTyping && searchResults.length === 0 && searchQuery && (
-        <div className="absolute top-full left-0 mt-2 w-full bg-white p-2 text-center text-gray-500 rounded shadow-lg">
-          Không tìm thấy phim
-        </div>
-      )}
+      {showSearchBar &&
+        !isLoading &&
+        !isTyping &&
+        searchResults.length === 0 &&
+        searchQuery && (
+          <div className="absolute top-full left-0 mt-2 w-full bg-white p-2 text-center text-gray-500 rounded shadow-lg">
+            Không tìm thấy phim
+          </div>
+        )}
     </div>
-  );
-};
+  )
+}
 
-export default Search;
+export default Search

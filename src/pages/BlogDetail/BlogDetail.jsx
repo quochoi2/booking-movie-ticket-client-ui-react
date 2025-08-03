@@ -4,7 +4,7 @@ const BlogSection = ({ title, imgSrc, text }) => (
   <div className="blog__details__item__text max-w-[750px]">
     <h4 style={{ marginBottom: '20px' }}>{title}</h4>
     <img src={imgSrc} alt={title} />
-    <p className=' text-[17px] leading-[28px]'>{text}</p>
+    <p className=" text-[17px] leading-[28px]">{text}</p>
   </div>
 )
 
@@ -16,8 +16,10 @@ const BlogDetail = () => {
           <div className="container">
             <div className="row d-flex justify-content-center">
               <div className="blog__details__title text-center">
-                <div className='flex justify-center'>
-                  <h2 style={{ maxWidth: '750px' }}>Anime dành cho người mới bắt đầu: 20 tác phẩm cần xem</h2>
+                <div className="flex justify-center">
+                  <h2 style={{ maxWidth: '750px' }}>
+                    Anime dành cho người mới bắt đầu: 20 tác phẩm cần xem
+                  </h2>
                 </div>
                 <div className="blog__details__social">
                   <a className="facebook flex justify-center">Facebook</a>
@@ -28,13 +30,33 @@ const BlogDetail = () => {
               </div>
               <div>
                 <div className="blog__details__pic">
-                  <img src="/img/blog/details/blog-details-pic.jpg" alt="Anime Blog" />
+                  <img
+                    src="/img/blog/details/blog-details-pic.jpg"
+                    alt="Anime Blog"
+                  />
                 </div>
               </div>
               <div className="flex justify-center">
                 <div className="blog__details__content grid grid-cols-1">
-                  <p style={{ maxWidth: '750px', fontSize: '17px', marginBottom: '42px', lineHeight: '28px' }}>
-                    Kết quả là vài tập cuối không thực sự thú vị đối với tôi, vì chúng giống như việc ổn định trong một thói quen quen thuộc và thoải mái hơn. Chúng ta đang thấy sự phát triển của nhân vật ở đây nhưng rất tinh tế (có thể nói là ngoại trừ Shouyou). Ý tôi là, việc Tobio là một thằng khốn nạn không phải là điều gì mới mẻ – nó giống như nền tảng của toàn bộ cốt truyện nhân vật của anh ta. Đối mặt với việc liệu việc anh ta là một thằng khốn nạn có phải là vấn đề đối với Crows hay không, đây trực tiếp là một sự tiến hóa, và có lẽ là một sự tiến hóa đã quá hạn, nhưng động lực chung với Kageyama về cơ bản là không thay đổi.
+                  <p
+                    style={{
+                      maxWidth: '750px',
+                      fontSize: '17px',
+                      marginBottom: '42px',
+                      lineHeight: '28px'
+                    }}
+                  >
+                    Kết quả là vài tập cuối không thực sự thú vị đối với tôi, vì
+                    chúng giống như việc ổn định trong một thói quen quen thuộc
+                    và thoải mái hơn. Chúng ta đang thấy sự phát triển của nhân
+                    vật ở đây nhưng rất tinh tế (có thể nói là ngoại trừ
+                    Shouyou). Ý tôi là, việc Tobio là một thằng khốn nạn không
+                    phải là điều gì mới mẻ – nó giống như nền tảng của toàn bộ
+                    cốt truyện nhân vật của anh ta. Đối mặt với việc liệu việc
+                    anh ta là một thằng khốn nạn có phải là vấn đề đối với Crows
+                    hay không, đây trực tiếp là một sự tiến hóa, và có lẽ là một
+                    sự tiến hóa đã quá hạn, nhưng động lực chung với Kageyama về
+                    cơ bản là không thay đổi.
                   </p>
                   <BlogSection
                     title="Tobio-Nishinoya showdown"
@@ -76,4 +98,4 @@ const BlogDetail = () => {
   )
 }
 
-export default BlogDetail;
+export default BlogDetail

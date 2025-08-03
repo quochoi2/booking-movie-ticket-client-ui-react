@@ -36,7 +36,9 @@ const BlogList = () => {
     <section className="text-white py-10">
       <div className="container mx-auto">
         <div className="flex items-center mb-5">
-          <h4 className="text-xl font-bold text-white border-l-4 border-red-500 pl-2 uppercase">Bài viết nổi bật</h4>
+          <h4 className="text-xl font-bold text-white border-l-4 border-red-500 pl-2 uppercase">
+            Bài viết nổi bật
+          </h4>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-6">

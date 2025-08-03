@@ -1,56 +1,44 @@
-import { useEffect, useState } from "react";
-import ViewCard from "./ViewCard";
-import StatisticService from "../services/statisticService";
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import ViewCard from './ViewCard'
+import StatisticService from '../services/statisticService'
+import Loading from './Loading'
 
-// const movies = [
-//   { title: "Boruto: Naruto next generations", image: "/img/sidebar/tv-1.jpg" },
-//   { title: "The Seven Deadly Sins: Wrath of the Gods", image: "/img/sidebar/tv-2.jpg" },
-//   { title: "Sword art online alicization war of underworld", image: "/img/sidebar/tv-3.jpg" },
-//   { title: "Fate/stay night: Heaven's Feel I. presage flower", image: "/img/sidebar/tv-4.jpg" },
-// ]
+const TopMovies = ({ className = '' }) => {
+  const [activeTab, setActiveTab] = useState('year')
 
-const TopMovies = ({ className = "" }) => {
-  const [activeTab, setActiveTab] = useState("year");
-  const [topMovies, setTopMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // ✅ 1. Sử dụng useQuery để fetch data
+  const {
+    data: topMovies,
+    isLoading,
+    isError
+  } = useQuery({
+    queryKey: ['top-movies', activeTab], // Cache key phụ thuộc vào activeTab
+    queryFn: () => StatisticService.topMovieByWeekMonthYear(),
+    select: (response) => {
+      // ✅ 2. Transform data trực tiếp trong query
+      const sourceData =
+        activeTab === 'week'
+          ? response.data.weekly.data
+          : activeTab === 'month'
+            ? response.data.monthly.data
+            : response.data.yearly.data
 
-  useEffect(() => {
-    const fetchTopMovies = async () => {
-      try {
-        setLoading(true);
+      return sourceData.slice(0, 5).map((movie) => ({
+        id: movie.movieId,
+        title: movie.title,
+        image: movie.image,
+        episodes: `${movie.totalTickets} vé`
+      }))
+    },
+    staleTime: 5 * 60 * 1000 // Data không bị coi là cũ trong 5 phút
+  })
 
-        // Gọi API (tự động sử dụng cache nếu có)
-        const response = await StatisticService.topMovieByWeekMonthYear();
-        const data = response.data;
-
-        // Xử lý dữ liệu như cũ
-        let movies = [];
-        if (activeTab === "week") movies = data.weekly.data;
-        else if (activeTab === "month") movies = data.monthly.data;
-        else if (activeTab === "year") movies = data.yearly.data;
-
-        const formattedMovies = movies.slice(0, 5).map((movie) => ({
-          id: movie.movieId,
-          title: movie.title,
-          image: movie.image,
-          episodes: `${movie.totalTickets} vé`,
-          // views: `${(movie.totalRevenue / 1000).toFixed(0)}k`,
-        }));
-
-        setTopMovies(formattedMovies);
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu phim hot:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTopMovies();
-  }, [activeTab]);
-
+  // ✅ 3. Render UI với các trạng thái tự động từ React Query
   return (
     <section className="top-movies py-10 min-w-[360px]">
       <div className="container mx-auto max-w-screen-lg">
+        {/* Phần header giữ nguyên */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center mr-[30px]">
             <h4 className="text-xl font-bold text-white border-l-4 border-red-500 pl-2 uppercase">
@@ -58,56 +46,41 @@ const TopMovies = ({ className = "" }) => {
             </h4>
           </div>
           <ul className="flex space-x-4 text-white text-sm">
-            <li
-              style={{ userSelect: "none" }}
-              className={`cursor-pointer ${
-                activeTab === "week"
-                  ? "text-[#d33b3b]"
-                  : "text-[#b7b7b7] hover:text-white"
-              }`}
-              onClick={() => setActiveTab("week")}
-            >
-              Tuần
-            </li>
-            <li
-              style={{ userSelect: "none" }}
-              className={`cursor-pointer ${
-                activeTab === "month"
-                  ? "text-[#d33b3b]"
-                  : "text-[#b7b7b7] hover:text-white"
-              }`}
-              onClick={() => setActiveTab("month")}
-            >
-              Tháng
-            </li>
-            <li
-              style={{ userSelect: "none" }}
-              className={`cursor-pointer ${
-                activeTab === "year"
-                  ? "text-[#d33b3b]"
-                  : "text-[#b7b7b7] hover:text-white"
-              }`}
-              onClick={() => setActiveTab("year")}
-            >
-              Năm
-            </li>
+            {['week', 'month', 'year'].map((tab) => (
+              <li
+                key={tab}
+                style={{ userSelect: 'none' }}
+                className={`cursor-pointer ${
+                  activeTab === tab
+                    ? 'text-[#d33b3b]'
+                    : 'text-[#b7b7b7] hover:text-white'
+                }`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab === 'week' ? 'Tuần' : tab === 'month' ? 'Tháng' : 'Năm'}
+              </li>
+            ))}
           </ul>
         </div>
 
-        {loading ? (
+        {/* ✅ Xử lý các trạng thái loading/error/data */}
+        {isLoading ? (
           <div className="flex justify-center items-center h-40">
             <p className="text-white">Đang tải dữ liệu...</p>
           </div>
-        ) : topMovies.length > 0 ? (
+        ) : isError ? (
+          <div className="flex justify-center items-center h-40">
+            <p className="text-white">Lỗi khi tải dữ liệu</p>
+          </div>
+        ) : topMovies?.length > 0 ? (
           <div className={`${className}`}>
-            {topMovies.map((movie, index) => (
+            {topMovies.map((movie) => (
               <ViewCard
-                key={movie.id || index}
+                key={movie.id}
                 id={movie.id}
                 title={movie.title}
                 image={movie.image}
                 episodes={movie.episodes}
-                // views={movie.views}
               />
             ))}
           </div>
@@ -118,7 +91,7 @@ const TopMovies = ({ className = "" }) => {
         )}
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default TopMovies;
+export default TopMovies

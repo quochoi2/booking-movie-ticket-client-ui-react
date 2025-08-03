@@ -1,10 +1,10 @@
 import BreadcrumbHero from '../../components/BreadcrumbHero'
-import BlogList from "../../components/BlogList"
+import BlogList from '../../components/BlogList'
 
 const Blog = () => {
   return (
     <>
-      <BreadcrumbHero 
+      <BreadcrumbHero
         title={'Our Blog'}
         description={'Welcome to the official Anime blog.'}
       />
@@ -13,8 +13,8 @@ const Blog = () => {
           <BlogList />
         </div>
       </div>
-    </>  
+    </>
   )
 }
- 
+
 export default Blog
