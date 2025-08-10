@@ -1,50 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { io } from 'socket.io-client'
 import { FaBell, FaTimes } from 'react-icons/fa'
-import secret from '../secret'
+import useSocketConnection from '../hooks/useSocketConnection'
 
 const Notification = () => {
-  const [notifications, setNotifications] = useState([])
+  useSocketConnection()
   const [isOpen, setIsOpen] = useState(false)
-  const [unreadCount, setUnreadCount] = useState(0)
-
-  // socket
-  useEffect(() => {
-    const socket = io(secret.SOCKET, {
-      auth: { token: localStorage.getItem('token') },
-      reconnection: true,
-      transports: ['websocket']
-    })
-
-    // Debug connection
-    socket.on('connect', () => {
-      console.log('✅ Connected with ID:', socket.id)
-    })
-
-    socket.on('disconnect', () => {
-      console.log('❌ Disconnected')
-    })
-
-    const user = JSON.parse(localStorage.getItem('user'))
-    if (user?.id) {
-      const roomName = `user_${user.id}`
-      console.log('Joining room:', roomName)
-      socket.emit('join-room', roomName)
-
-      // Xác nhận từ server
-      socket.on('room-joined', (room) => {
-        console.log('🗂️ Joined room:', room)
-      })
+  const [notifications, setNotifications] = useState([
+    // Dữ liệu mẫu - có thể xóa khi kết nối với backend
+    {
+      id: '12345',
+      orderId: 'ORD-12345',
+      movie: 'Avengers: Endgame',
+      timestamp: new Date().toISOString()
     }
-
-    socket.on('payment_success', (data) => {
-      console.log('📩 Received data:', data)
-      setNotifications((prev) => [data, ...prev])
-    })
-
-    return () => socket.disconnect()
-  }, [])
+  ])
+  const [unreadCount, setUnreadCount] = useState(1) // Số thông báo chưa đọc
 
   const toggleNotifications = () => {
     setIsOpen(!isOpen)
@@ -53,9 +24,13 @@ const Notification = () => {
     }
   }
 
-  const removeNotification = (id, e) => {
-    e.stopPropagation()
-    setNotifications((prev) => prev.filter((n) => n.orderId !== id))
+  const removeNotification = (id) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id))
+  }
+
+  const clearAll = () => {
+    setNotifications([])
+    setUnreadCount(0)
   }
 
   return (
@@ -67,7 +42,6 @@ const Notification = () => {
       >
         <FaBell className="text-xl text-gray-700" />
 
-        {/* Hiển thị số lượng thông báo chưa đọc */}
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -81,14 +55,13 @@ const Notification = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute -right-20 mt-2 w-60 bg-white rounded-md shadow-lg z-50 border border-gray-200"
+            className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-50 border border-gray-200"
           >
-            <div className="p-3 border-b flex justify-between items-center">
-              <h3 className="font-semibold">Thông báo</h3>
+            <div className="p-3 border-b flex justify-end">
               {notifications.length > 0 && (
                 <button
-                  onClick={() => setNotifications([])}
-                  className="text-xs text-blue-500 hover:text-blue-700"
+                  onClick={clearAll}
+                  className="text-xs text-blue-500 hover:text-blue-700 cursor-pointer"
                 >
                   Xóa tất cả
                 </button>
@@ -103,49 +76,31 @@ const Notification = () => {
               <ul className="max-h-80 overflow-y-auto">
                 {notifications.map((notification) => (
                   <motion.li
-                    key={notification.orderId}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className={`p-3 border-b hover:bg-gray-50 ${
-                      notifications.indexOf(notification) < unreadCount
-                        ? 'bg-blue-50'
-                        : ''
-                    }`}
+                    key={notification.id}
+                    className="p-3 border-b hover:bg-gray-50"
                   >
-                    <div className="flex justify-between">
-                      <div className="flex-1">
-                        <p className="font-medium text-green-600">
-                          {notification.message}
+                    <div className="flex justify-between items-start relative">
+                      <div>
+                        <p
+                          style={{ color: 'black', marginBottom: 0 }}
+                          className="font-medium"
+                        >
+                          Đơn hàng: {notification.orderId}
                         </p>
-                        <p className="text-sm mt-1">
-                          <span className="font-semibold">
-                            {notification.data.movie}
-                          </span>
-                          <span className="mx-2">•</span>
-                          {notification.data.showtime}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Ghế: {notification.data.seats}
+                        <p
+                          style={{ color: 'black', marginBottom: '12px' }}
+                          className="text-sm mt-1"
+                        >
+                          Phim: {notification.movie}
                         </p>
                       </div>
-                      <div className="flex flex-col items-end">
+                      <div className="absolute right-0">
                         <button
-                          onClick={(e) =>
-                            removeNotification(notification.orderId, e)
-                          }
-                          className="text-gray-400 hover:text-gray-600 mb-1"
+                          onClick={() => removeNotification(notification.id)}
+                          className="text-gray-400 hover:text-gray-600 cursor-pointer"
                         >
                           <FaTimes size={12} />
                         </button>
-                        <span className="text-xs text-gray-400">
-                          {new Date(notification.timestamp).toLocaleTimeString(
-                            [],
-                            {
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            }
-                          )}
-                        </span>
                       </div>
                     </div>
                   </motion.li>

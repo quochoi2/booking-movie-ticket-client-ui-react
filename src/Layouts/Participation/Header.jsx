@@ -11,8 +11,10 @@ import { UserContext } from '../../contexts/UserContext'
 import Search from '../../components/Search'
 import AuthService from '../../services/authService'
 import Notification from '../../components/Notification'
+import useSocketConnection from '../../hooks/useSocketConnection'
 
 const Header = ({ props }) => {
+  // useSocketConnection()
   const [menuOpen, setMenuOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [user, setUser] = useState(null) // Thêm state cho user
@@ -86,7 +88,7 @@ const Header = ({ props }) => {
         <div className="flex items-center space-x-4 gap-3">
           <Search />
 
-          <Notification />
+          {/* <Notification /> */}
 
           {isAuthenticated ? (
             <div className="relative" ref={dropdownRef}>
