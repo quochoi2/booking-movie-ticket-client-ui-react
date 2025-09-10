@@ -31,8 +31,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/sign-in" element={<Login />} />
+        <Route path="/sign-up" element={<Register />} />
         <Route path="/vertify" element={<Vertify />} />
         <Route path="/success" element={<Success />} />
         <Route path="*" element={<NotFound />} />
