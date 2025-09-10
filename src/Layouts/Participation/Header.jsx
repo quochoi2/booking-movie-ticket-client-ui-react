@@ -1,19 +1,13 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faBell,
-  faUser,
-  faBars,
-  faTimes
-} from '@fortawesome/free-solid-svg-icons'
+import { faUser, faBars, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../contexts/UserContext'
 import Search from '../../components/Search'
 import AuthService from '../../services/authService'
 import Notification from '../../components/Notification'
-import useSocketConnection from '../../hooks/useSocketConnection'
 
-const Header = ({ props }) => {
+const Header = () => {
   // useSocketConnection()
   const [menuOpen, setMenuOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -36,7 +30,7 @@ const Header = ({ props }) => {
     AuthService.logout()
     logout()
     setUser(null) // Xóa thông tin user khi logout
-    navigate('/login')
+    navigate('/sign-in')
   }
 
   useEffect(() => {

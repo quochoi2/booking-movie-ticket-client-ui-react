@@ -6,7 +6,7 @@ import { UserContext } from '../../contexts/UserContext'
 import secret from '../../secret'
 
 const Login = () => {
-  const { login, user } = useContext(UserContext)
+  const { login } = useContext(UserContext)
   const navigate = useNavigate()
 
   const [username, setUsername] = useState('nguyend')
@@ -99,7 +99,7 @@ const Login = () => {
                 Không có tài khoản?
               </h3>
               <a
-                href="/register"
+                href="/sign-up"
                 className="bg-red-500 py-3 px-8 rounded-md font-bold hover:bg-red-600 transition"
               >
                 Đăng ký ngay

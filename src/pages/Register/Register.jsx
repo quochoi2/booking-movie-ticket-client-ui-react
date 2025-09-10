@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import BreadcrumbHero from '../../components/BreadcrumbHero'
 import AuthService from '../../services/authService'
 import { message } from 'antd'
+import secret from '../../secret'
 
 const Register = () => {
   const navigate = useNavigate()
@@ -161,7 +162,7 @@ const Register = () => {
                     Đã có tài khoản?
                   </h3>
                   <a
-                    href="/login"
+                    href="/sign-in"
                     className="bg-red-500 py-3 px-8 rounded-md font-bold hover:bg-red-600 transition"
                   >
                     Đăng nhập ngay
