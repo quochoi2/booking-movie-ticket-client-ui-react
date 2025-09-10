@@ -130,7 +130,7 @@ const Header = () => {
               )}
             </div>
           ) : (
-            <Link to="/login">
+            <Link to="/sign-in">
               <FontAwesomeIcon icon={faUser} />
             </Link>
           )}
